@@ -1,12 +1,17 @@
 {
   "name": "Generative AI Java Development Environment",
-  "image": "mcr.microsoft.com/devcontainers/java:21",
+  // "image": "mcr.microsoft.com/devcontainers/java:21-bookworm",
+  // 备选：使用OpenJDK官方镜像，完全兼容Java 21
+  "image": "openjdk:21-slim-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
       "upgradePackages": false
     },
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false,
+      "dockerComposeVersion": "v2"
+    },
     "ghcr.io/devcontainers/features/azure-cli:1": {
       "installBicep": true,
       "version": "latest"
@@ -34,10 +39,12 @@
       }
     }
   },
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y maven",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y maven && sudo apt-get clean && rm -rf /var/lib/apt/lists/*",
   "remoteUser": "vscode",
   "containerEnv": {
-    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-current",
+    // "JAVA_HOME": "/usr/lib/jvm/msopenjdk-current",
+    // OpenJDK镜像的JDK路径通常为/usr/local/openjdk-21，需对应修改
+    "JAVA_HOME": "/usr/local/openjdk-21",
     "MAVEN_OPTS": "-Xmx2g"
   },
   "forwardPorts": [8080]
